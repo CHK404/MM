@@ -6,7 +6,27 @@
         xmlns:local="clr-namespace:Material_Management.Views"
         mc:Ignorable="d"
         Title="SignInPage" Height="300" Width="400">
-    <Grid>
-        
+    <Grid Background="Transparent">
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Sign In" FontSize="16" FontFamily="Times New Roman Bold" Margin="0,0,0,2"/>
+                <TextBlock Text="Enter your ID below to login to your account" Margin="0,0,0,5"/>
+
+                <TextBlock Text="ID" Margin="0,0,0,3" FontFamily="Times New Roman Bold" />
+                <TextBox Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox_ID" Margin="0,0,0,3"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Password" Grid.Column="0" Margin="0,0,0,3" HorizontalAlignment="Left" FontFamily="Times New Roman Bold" />
+                </Grid>
+
+                <PasswordBox x:Name="textBox_Password" Margin="0,0,0,10" PasswordChanged="PasswordBox_PasswordChanged" />
+                <Button x:Name="button_Login" Content="Login" Width="150"  Margin="0,0,0,2" Command="{Binding SignInCommand}" Cursor="Hand" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
