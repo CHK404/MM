@@ -17,12 +17,17 @@ namespace Material_Management.Data
         {
             if (!opts.IsConfigured)
             {
-                opts.UseSqlServer("Server=서버주소;Database=DB이름;User Id=ID;Password=PW;");
+                opts.UseSqlServer(
+                    "Server=DESKTOP-L1MTDBC\\SQLEXPRESS;Database=MM;Trusted_Connection=True;TrustServerCertificate=True;",
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()
+                );
             }
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<UserList>().ToTable("UserInfo");
+            builder.Entity<Material>().ToTable("Material");
         }
     }
 }

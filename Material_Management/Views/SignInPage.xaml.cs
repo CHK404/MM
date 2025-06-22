@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Material_Management.Models;
 using Material_Management.ViewModels;
 using Material_Management.Data;
+using System.Windows.Navigation;
 
 namespace Material_Management.Views
 {
@@ -39,8 +40,13 @@ namespace Material_Management.Views
         }
         private void LoginSuccess()
         {
-            var main = new MainWindow(CurrentUser.UserID!, CurrentUser.IsAdmin);
-            main.Show();
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            // 시작화면 숨기고 Frame 보이게
+            mainWindow.StartPanel.Visibility = Visibility.Collapsed;
+            mainWindow.ContentFrame.Visibility = Visibility.Visible;
+            // MaterialView 페이지로 전환
+            mainWindow.ContentFrame.Navigate(new MaterialView());
+
             this.Close();
         }
     }

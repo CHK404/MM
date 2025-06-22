@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Material_Management.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="300" Width="400">
+        Title="MainWindow" Height="600" Width="700">
     <Grid>
         <Grid x:Name="StartPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock FontSize="32" FontFamily="Times New Roman" HorizontalAlignment="Center" Margin="-37">
