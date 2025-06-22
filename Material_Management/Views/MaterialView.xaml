@@ -1,0 +1,73 @@
+﻿<Page x:Class="Material_Management.Views.MaterialView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Title="Material" Loaded="Page_Loaded"
+      d:DesignHeight="450" d:DesignWidth="550">
+    <Grid Background="#FFECECEC" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="자재 목록"
+               FontSize="24"
+               FontWeight="Bold"
+               Margin="10"
+               Grid.Row="0"/>
+            <Button Content="사용자 관리" 
+              Grid.Column="1" 
+              Margin="10"
+              VerticalAlignment="Center"
+              Command="{Binding ShowUserListCommand}"
+              Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
+
+        <DataGrid x:Name="MaterialDataGrid"
+              ItemsSource="{Binding Materials}"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              Margin="10"
+              Grid.Row="1"
+              MouseDoubleClick="DataGrid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="일련번호" Binding="{Binding SerialNumber}" />
+                <DataGridTextColumn Header="자재 이름" Binding="{Binding MaterialName}" />
+                <DataGridTextColumn Header="자재 종류" Binding="{Binding MaterialType}" />
+                <DataGridTextColumn Header="제조사" Binding="{Binding Manufacturer}" />
+                <DataGridTextColumn Header="수량" Binding="{Binding Quantity}" />
+                <DataGridTextColumn Header="사용자 ID" Binding="{Binding UserID}" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="상세 정보 보기" 
+                    Command="{Binding DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}" />
+                    <MenuItem Header="수정" 
+                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}" />
+                    <MenuItem Header="삭제" 
+                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <Button Content="추가"
+            Width="120"
+            Height="40"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="10"
+            Grid.Row="1"
+            Command="{Binding AddMaterialCommand}"/>
+    </Grid>
+</Page>
+

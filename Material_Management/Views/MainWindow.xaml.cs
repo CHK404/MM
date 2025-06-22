@@ -8,17 +8,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Material_Management.ViewModels;
+using Material_Management.Views;
 
 namespace Material_Management
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string? userId, bool isAdmin)
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
+        }
+        public void NavigateToMaterialPage()
+        {
+            StartPanel.Visibility = Visibility.Collapsed;   // 초기 로그인/회원가입 UI 숨김
+            ContentFrame.Visibility = Visibility.Visible;   // Frame을 보이게 하고 Material 페이지 로드
+            ContentFrame.Navigate(new MaterialView());
         }
     }
 }

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Material_Management.Views"
+        xmlns:vm="clr-namespace:Material_Management.ViewModels"
         mc:Ignorable="d"
         Title="SignInPage" Height="300" Width="400">
     <Grid Background="Transparent">
@@ -24,7 +24,7 @@
                     <TextBlock Text="Password" Grid.Column="0" Margin="0,0,0,3" HorizontalAlignment="Left" FontFamily="Times New Roman Bold" />
                 </Grid>
 
-                <PasswordBox x:Name="textBox_Password" Margin="0,0,0,10" PasswordChanged="PasswordBox_PasswordChanged" />
+                <PasswordBox x:Name="PasswordBox" Margin="0,0,0,10" PasswordChanged="PasswordBox_PasswordChanged" />
                 <Button x:Name="button_Login" Content="Login" Width="150"  Margin="0,0,0,2" Command="{Binding SignInCommand}" Cursor="Hand" />
             </StackPanel>
         </Grid>

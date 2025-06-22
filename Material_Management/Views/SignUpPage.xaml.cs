@@ -11,17 +11,31 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Material_Management.ViewModels;
 
 namespace Material_Management.Views
 {
-    /// <summary>
-    /// Interaction logic for SignUpPage.xaml
-    /// </summary>
     public partial class SignUpPage : Window
     {
+        private readonly SignUpViewModel viewModel;
         public SignUpPage()
         {
             InitializeComponent();
+            viewModel = new SignUpViewModel();
+            this.DataContext = viewModel;
+
+            viewModel.SignUpCallback = SignedUp;
+            PasswordBox.PasswordChanged += (s, e) =>
+            {
+                viewModel.Password = PasswordBox.Password;
+            };
+            radioButton_isUser.Checked += (s, e) => viewModel.IsAdmin = false;
+            radioButton_isAdmin.Checked += (s, e) => viewModel.IsAdmin = true;
+        }
+        public void SignedUp()
+        {
+            MessageBox.Show("회원가입이 완료되었습니다", "완료", MessageBoxButton.OK, MessageBoxImage.Information);
+            this.Close();
         }
     }
 }

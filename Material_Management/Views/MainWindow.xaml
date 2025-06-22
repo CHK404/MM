@@ -3,16 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Material_Management"
+        xmlns:vm="clr-namespace:Material_Management.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="300" Width="400">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock FontSize="32" FontFamily="Times New Roman" HorizontalAlignment="Center" Margin="-37">
-            <Bold>Material Management</Bold>
-        </TextBlock>
-        <StackPanel>
-            <Button Background="AliceBlue" Content="Sign In" FontSize="16" Width="150" Height="50" Margin="20" />
-            <Button Background="AliceBlue" Content="Sign Up" FontSize="16" Width="150" Height="50" />
-        </StackPanel>
+    <Grid>
+        <Grid x:Name="StartPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock FontSize="32" FontFamily="Times New Roman" HorizontalAlignment="Center" Margin="-37">
+                <Bold>Material Management</Bold>
+            </TextBlock>
+            <StackPanel>
+                <Button Background="AliceBlue" Content="Sign In" FontSize="16" Width="150"
+                        Height="50" Margin="20" Command="{Binding SignInCommand}" />
+                <Button Background="AliceBlue" Content="Sign Up" FontSize="16" Width="150"
+                        Height="50" Command="{Binding SignUpCommand}" />
+            </StackPanel>
+        </Grid>
+        <Frame x:Name="ContentFrame" Visibility="Collapsed" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

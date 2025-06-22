@@ -12,17 +12,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Material_Management.ViewModels;
 
 namespace Material_Management.Views
 {
-    /// <summary>
-    /// Material.xaml에 대한 상호 작용 논리
-    /// </summary>
-    public partial class Material : Page
+    public partial class UserView : Page
     {
-        public Material()
+        public UserView()
         {
             InitializeComponent();
+            DataContext = new UserViewModel();
+        }
+        private async void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (DataContext is UserViewModel vm)
+            {
+                await vm.LoadUsersAsync();
+            }
         }
     }
 }
