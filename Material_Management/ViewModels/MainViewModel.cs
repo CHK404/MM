@@ -10,6 +10,7 @@ using Material_Management.Data;
 using Material_Management.Models;
 using System.Windows.Input;
 using System.Windows;
+using Material_Management.Views;
 
 namespace Material_Management.ViewModels
 {
@@ -25,11 +26,13 @@ namespace Material_Management.ViewModels
         }
         private void OnSignIn()
         {
-            MessageBox.Show("Sign In 창을 열게 해주세요");
+            var signInWindow = new SignInPage();
+            signInWindow.Show();
         }
         private void OnSignUp()
         {
-            MessageBox.Show("Sign Up 창을 열게 해주세요");
+            var signUpWindow = new SignUpPage();
+            signUpWindow.Show();
         }
     }
 }

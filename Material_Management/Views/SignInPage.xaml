@@ -13,7 +13,7 @@
                 <TextBlock Text="Enter your ID below to login to your account" Margin="0,0,0,5"/>
 
                 <TextBlock Text="ID" Margin="0,0,0,3" FontFamily="Times New Roman Bold" />
-                <TextBox Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox_ID" Margin="0,0,0,3"/>
+                <TextBox Text="{Binding UserID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="textBox_ID" Margin="0,0,0,3"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>

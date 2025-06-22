@@ -15,11 +15,13 @@ namespace Material_Management
 {
     public partial class MainWindow : Window
     {
-        public MainWindow(string? userId, bool isAdmin)
+        public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+        public MainWindow(string? userId, bool isAdmin) : this() { }
+
         public void NavigateToMaterialPage()
         {
             StartPanel.Visibility = Visibility.Collapsed;   // 초기 로그인/회원가입 UI 숨김

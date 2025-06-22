@@ -25,12 +25,16 @@ namespace Material_Management.ViewModels
         }
         private async Task Login()
         {
-            if (string.IsNullOrWhiteSpace(UserID) || string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(UserID))
             {
-                ShowError("아이디 또는 비밀번호를 입력해주세요.");
+                ShowError("아이디를 입력해주세요.");
                 return;
             }
-
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                ShowError("비밀번호를 입력해주세요.");
+                return;
+            }
             await using var db = new AppDbContext();
             var user = await db.Users.FirstOrDefaultAsync(u => u.UserID == UserID);
 
