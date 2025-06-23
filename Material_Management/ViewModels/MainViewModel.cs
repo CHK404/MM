@@ -11,6 +11,7 @@ using Material_Management.Models;
 using System.Windows.Input;
 using System.Windows;
 using Material_Management.Views;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Material_Management.ViewModels
 {

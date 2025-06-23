@@ -24,12 +24,9 @@ namespace Material_Management.Views
             DataContext = new MaterialViewModel();
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is MaterialViewModel vm)
-            {
-                await vm.LoadMaterialsAsync();
-            }
+            this.DataContext = new MaterialViewModel();
         }
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {

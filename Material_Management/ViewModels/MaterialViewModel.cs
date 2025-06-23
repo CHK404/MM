@@ -12,24 +12,48 @@ using Material_Management.Models;
 using Material_Management.Data;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
+using System.Threading.Channels;
+using System.Windows.Media;
 
 namespace Material_Management.ViewModels
 {
-    public class MaterialViewModel : ObservableObject
+    public partial class MaterialViewModel : ObservableObject
     {
         public ObservableCollection<Material> Materials { get; } = new ObservableCollection<Material>();
 
-        public ICommand ViewDetailsCommand { get; }
-        public ICommand EditCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand AddMaterialCommand { get; }
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveMaterialCommand))]
+        [NotifyCanExecuteChangedFor(nameof(EditMaterialCommand))]
+        [NotifyCanExecuteChangedFor(nameof(DeleteMaterialCommand))]
+        private Material? selectedMaterial;
+        partial void OnSelectedMaterialChanged(Material? value)
+        {
+            EditMaterialCommand.NotifyCanExecuteChanged();
+            DeleteMaterialCommand.NotifyCanExecuteChanged();
+        }
 
+        [ObservableProperty]
+        private bool isPopupOpen;
+
+        public IRelayCommand ViewDetailsCommand { get; }
+        public IRelayCommand EditMaterialCommand { get; }
+        public IRelayCommand DeleteMaterialCommand { get; }
+        public IRelayCommand AddMaterialCommand { get; }
+        public IRelayCommand SaveMaterialCommand { get; }
+        public IRelayCommand CancelCommand { get; }
+
+        private bool CanModifyMaterial(Material? material) => material != null;
         public MaterialViewModel()
         {
-            ViewDetailsCommand = new RelayCommand<Material>(ViewDetails);
-            EditCommand = new RelayCommand<Material>(EditMaterial);
-            DeleteCommand = new RelayCommand<Material>(DeleteMaterial);
-            AddMaterialCommand = new RelayCommand(AddMaterial);
+            ViewDetailsCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<Material>(ViewDetails);
+            EditMaterialCommand = new RelayCommand(EditMaterial, () => SelectedMaterial != null);
+            DeleteMaterialCommand = new RelayCommand(DeleteMaterial, () => SelectedMaterial != null);
+            AddMaterialCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(OpenAddMaterialPopup);
+            SaveMaterialCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(async () => await SaveMaterialAsync(), CanSaveMaterial);
+            CancelCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(Cancel);
+
+            _ = LoadMaterialsAsync();
         }
 
         public async Task LoadMaterialsAsync()
@@ -46,7 +70,7 @@ namespace Material_Management.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"데이터 로드 중 오류 발생: {ex.Message}", "에러", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"오류 발생: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -65,67 +89,80 @@ namespace Material_Management.ViewModels
                              $"상세정보: {material.Content}";
             MessageBox.Show(details, "자재 상세정보", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
-        private async void EditMaterial(Material? material)
+        private void EditMaterial()
         {
-            if (material == null)
+            if (SelectedMaterial == null)
                 return;
-            try
-            {
-                using var db = new AppDbContext();
-                db.Materials.Update(material);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"수정 중 오류 발생: {ex.Message}", "에러", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            IsPopupOpen = true;
         }
-
-        private async void DeleteMaterial(Material? material)
+        private void OpenAddMaterialPopup()
         {
-            if (material == null)
-                return;
-
-            if (MessageBox.Show("정말 삭제하시겠습니까?", "삭제 확인", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                return;
-
-            try
+            SelectedMaterial = new Material
             {
-                using var db = new AppDbContext();
-                db.Materials.Remove(material);
-                await db.SaveChangesAsync();
-                Materials.Remove(material);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"삭제 중 오류 발생: {ex.Message}", "에러", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private async void AddMaterial()
-        {
-            var newMaterial = new Material
-            {
-                SerialNumber = "",
-                MaterialName = "자재명",
-                MaterialType = "재료",
-                Manufacturer = "제조사",
+                SerialNumber = Guid.NewGuid().ToString(),
+                MaterialName = "",
+                MaterialType = "",
+                Manufacturer = "",
+                InfoURL = "",
+                Content = "",
                 Quantity = 1,
                 UserID = CurrentUser.UserID
             };
+            IsPopupOpen = true;
+        }
+
+        private async Task SaveMaterialAsync()
+        {
+            if (SelectedMaterial == null)
+                return;
 
             try
             {
                 using var db = new AppDbContext();
-                db.Materials.Add(newMaterial);
-                await db.SaveChangesAsync();
-                Materials.Add(newMaterial);
+
+                bool exists = await db.Materials.AnyAsync(m => m.SerialNumber == SelectedMaterial.SerialNumber);
+
+                if (!exists)
+                {
+                    db.Materials.Add(SelectedMaterial);
+                    await db.SaveChangesAsync();
+
+                    Materials.Add(SelectedMaterial);
+                }
+                else
+                {
+                    db.Attach(SelectedMaterial);
+                    db.Entry(SelectedMaterial).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+
+                IsPopupOpen = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"추가 중 오류 발생: {ex.Message}", "에러", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"오류 발생: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        private bool CanSaveMaterial() => SelectedMaterial != null;
+        private async void DeleteMaterial()
+        {
+            if (SelectedMaterial == null)
+                return;
+
+            if (MessageBox.Show("정말 삭제하시겠습니까?", "삭제 확인",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                return;
+
+            using var db = new AppDbContext();
+            db.Materials.Remove(SelectedMaterial);
+            await db.SaveChangesAsync();
+            Materials.Remove(SelectedMaterial);
+            SelectedMaterial = null;
+        }
+        private void Cancel()
+        {
+            SelectedMaterial = null;
+            IsPopupOpen = false;
         }
     }
 }

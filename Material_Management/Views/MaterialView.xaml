@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -32,11 +33,12 @@
 
         <DataGrid x:Name="MaterialDataGrid"
               ItemsSource="{Binding Materials}"
+              SelectedItem="{Binding SelectedMaterial, Mode=TwoWay}"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               Margin="10"
               Grid.Row="1"
-              MouseDoubleClick="DataGrid_MouseDoubleClick">
+              MouseDoubleClick="DataGrid_MouseDoubleClick" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="일련번호" Binding="{Binding SerialNumber}" />
                 <DataGridTextColumn Header="자재 이름" Binding="{Binding MaterialName}" />
@@ -45,29 +47,68 @@
                 <DataGridTextColumn Header="수량" Binding="{Binding Quantity}" />
                 <DataGridTextColumn Header="사용자 ID" Binding="{Binding UserID}" />
             </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="상세 정보 보기" 
-                    Command="{Binding DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                    CommandParameter="{Binding}" />
-                    <MenuItem Header="수정" 
-                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                    CommandParameter="{Binding}" />
-                    <MenuItem Header="삭제" 
-                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                    CommandParameter="{Binding}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
         </DataGrid>
 
-        <Button Content="추가"
-            Width="120"
-            Height="40"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Margin="10"
-            Grid.Row="1"
-            Command="{Binding AddMaterialCommand}"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button Content="수정" Width="120" Height="40" Margin="0,0,10,0" Command="{Binding EditMaterialCommand}"/>
+            <Button Content="추가" Width="120" Height="40" Margin="0,0,10,0" Command="{Binding AddMaterialCommand}"/>
+            <Button Content="삭제" Width="120" Height="40" Margin="0,0,10,0" Command="{Binding DeleteMaterialCommand}"/>
+        </StackPanel>
+
+        <Popup IsOpen="{Binding IsPopupOpen}" 
+               Placement="Center" 
+               StaysOpen="False" 
+               AllowsTransparency="True">
+            <Border Background="White" 
+                    BorderBrush="Gray" 
+                    BorderThickness="1" 
+                    Padding="20" 
+                    CornerRadius="5">
+                <StackPanel Width="300">
+                    <TextBlock Text="자재 정보 입력" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               Margin="0,0,0,10" 
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="일련번호:"/>
+                    <TextBox Text="{Binding SelectedMaterial.SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" IsReadOnly="True" />
+                    <TextBlock Text="자재명:" />
+                    <TextBox Text="{Binding SelectedMaterial.MaterialName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="자재 종류:" />
+                    <TextBox Text="{Binding SelectedMaterial.MaterialType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="정보 URL:" />
+                    <TextBox Text="{Binding SelectedMaterial.InfoURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="제조사:" />
+                    <TextBox Text="{Binding SelectedMaterial.Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="수량:" />
+                    <TextBox Text="{Binding SelectedMaterial.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="상세정보:" />
+                    <TextBox Text="{Binding SelectedMaterial.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <TextBlock Text="사용자:" />
+                    <TextBox Text="{Binding SelectedMaterial.UserID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,5,0,10" />
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                Margin="0,20,0,0">
+                        <Button Content="저장" 
+                                Width="80" 
+                                Margin="0,0,10,0" 
+                                Command="{Binding SaveMaterialCommand}"/>
+                        <Button Content="취소" 
+                                Width="80" 
+                                Command="{Binding CancelCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
 </Page>
 
