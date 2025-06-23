@@ -63,7 +63,7 @@ namespace Material_Management.ViewModels
             }
 
             await using var db = new AppDbContext();
-            if (await db.Users.AnyAsync(u => u.UserID == UserID))
+            if (await db.UserInfo.AnyAsync(u => u.UserID == UserID))
             {
                 ShowError("이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
                 return;
@@ -77,7 +77,7 @@ namespace Material_Management.ViewModels
                 IsAdmin = IsAdmin
             };
 
-            await db.Users.AddAsync(newUser);
+            await db.UserInfo.AddAsync(newUser);
             await db.SaveChangesAsync();
 
             SignUpCallback?.Invoke();

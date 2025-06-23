@@ -36,7 +36,7 @@ namespace Material_Management.ViewModels
                 return;
             }
             await using var db = new AppDbContext();
-            var user = await db.Users.FirstOrDefaultAsync(u => u.UserID == UserID);
+            var user = await db.UserInfo.FirstOrDefaultAsync(u => u.UserID == UserID);
 
             if (user is null)
             {

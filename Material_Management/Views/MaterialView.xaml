@@ -23,7 +23,7 @@
                FontWeight="Bold"
                Margin="10"
                Grid.Row="0"/>
-            <Button Content="사용자 관리" 
+            <Button Content="사용자 목록" 
               Grid.Column="1" 
               Margin="10"
               VerticalAlignment="Center"

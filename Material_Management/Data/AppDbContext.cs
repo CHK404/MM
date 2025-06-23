@@ -11,7 +11,7 @@ namespace Material_Management.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<UserList> Users { get; set; }
+        public DbSet<UserList> UserInfo { get; set; }
         public DbSet<Material> Materials { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder opts)
         {
