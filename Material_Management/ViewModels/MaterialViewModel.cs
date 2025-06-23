@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Threading.Channels;
 using System.Windows.Media;
+using Material_Management.Views;
 
 namespace Material_Management.ViewModels
 {
@@ -27,6 +28,8 @@ namespace Material_Management.ViewModels
         [NotifyCanExecuteChangedFor(nameof(EditMaterialCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteMaterialCommand))]
         private Material? selectedMaterial;
+        [ObservableProperty]
+        private bool isAdmin = CurrentUser.IsAdmin;
         partial void OnSelectedMaterialChanged(Material? value)
         {
             EditMaterialCommand.NotifyCanExecuteChanged();
@@ -42,6 +45,7 @@ namespace Material_Management.ViewModels
         public IRelayCommand AddMaterialCommand { get; }
         public IRelayCommand SaveMaterialCommand { get; }
         public IRelayCommand CancelCommand { get; }
+        public IRelayCommand ShowUserListCommand { get; }
 
         private bool CanModifyMaterial(Material? material) => material != null;
         public MaterialViewModel()
@@ -52,6 +56,8 @@ namespace Material_Management.ViewModels
             AddMaterialCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(OpenAddMaterialPopup);
             SaveMaterialCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(async () => await SaveMaterialAsync(), CanSaveMaterial);
             CancelCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(Cancel);
+
+            ShowUserListCommand = new RelayCommand(ShowUserList, () => CurrentUser.IsAdmin);
 
             _ = LoadMaterialsAsync();
         }
@@ -163,6 +169,11 @@ namespace Material_Management.ViewModels
         {
             SelectedMaterial = null;
             IsPopupOpen = false;
+        }
+        private void ShowUserList()
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.ContentFrame.Navigate(new UserView());
         }
     }
 }
