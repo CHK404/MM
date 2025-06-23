@@ -12,42 +12,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
-            <TextBlock Text="사용자 목록" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
-                       VerticalAlignment="Center"/>
-            <Button Content="추가" 
-                    Margin="20,0,0,0" 
-                    Width="100" 
-                    Command="{Binding AddUserCommand}" />
-            <Button Content="수정" 
-                    Margin="10,0,0,0" 
-                    Width="100" 
-                    Command="{Binding EditUserCommand}" 
-                    CommandParameter="{Binding SelectedUser}" />
-        </StackPanel>
-
-        <DataGrid x:Name="dgUsers"
-                  ItemsSource="{Binding Users}"
-                  SelectedItem="{Binding SelectedUser}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  Margin="10"
-                  Grid.Row="1">
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="사용자 목록" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Grid.Column="0"/>
+            <Button Content="삭제" Width="100" Command="{Binding DeleteUserCommand}" Grid.Column="1" HorizontalAlignment="Right"/>
+        </Grid>
+        <DataGrid x:Name="dgUsers" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"
+                  AutoGenerateColumns="False" IsReadOnly="True" Margin="10" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="UserID" Binding="{Binding UserID}" />
                 <DataGridTextColumn Header="IsAdmin" Binding="{Binding IsAdmin}" />
             </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                    <MenuItem Header="삭제" 
-                              Command="{Binding DeleteUserCommand}"
-                              CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
         </DataGrid>
+
     </Grid>
 </Page>
 
